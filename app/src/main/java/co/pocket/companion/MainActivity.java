@@ -28,6 +28,7 @@ public final class MainActivity extends Activity {
         }
     }
     @Override protected void onResume() { super.onResume(); if (!isFinishing()) { if (unlocked) render(); else lock(); } }
+    @Override protected void onPause() { unlocked=false; super.onPause(); }
     @Override protected void onStop() {
         unlocked = false;
         if (dialog != null) dialog.dismiss();
