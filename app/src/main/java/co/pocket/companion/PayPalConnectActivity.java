@@ -27,7 +27,7 @@ public final class PayPalConnectActivity extends Activity {
             Toast.makeText(this, "PayPal backend is not configured in this build.", Toast.LENGTH_LONG).show();
             return;
         }
-        String ret = URLEncoder.encode("pocket://oauth/paypal", StandardCharsets.UTF_8);
+        String ret = Uri.encode("pocket://oauth/paypal");
         Uri u = Uri.parse(base.replaceAll("/$", "") + "/oauth/paypal/start?return_uri=" + ret);
         startActivity(new Intent(Intent.ACTION_VIEW, u));
         SecurityEvents.record(this,"paypal_connect_started");

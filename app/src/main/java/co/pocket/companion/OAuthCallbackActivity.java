@@ -25,7 +25,7 @@ public final class OAuthCallbackActivity extends Activity {
         Executors.newSingleThreadExecutor().execute(() -> {
             boolean ok = false;
             try {
-                URL url = new URL(base.replaceAll("/$", "") + "/oauth/paypal/session/" + java.net.URLEncoder.encode(session, java.nio.charset.StandardCharsets.UTF_8));
+                URL url = new URL(base.replaceAll("/$", "") + "/oauth/paypal/session/" + Uri.encode(session));
                 HttpURLConnection c = (HttpURLConnection) url.openConnection(); c.setConnectTimeout(8000); c.setReadTimeout(8000); c.setRequestMethod("GET");
                 ok = c.getResponseCode() == 200;
             } catch (Exception ignored) {}
