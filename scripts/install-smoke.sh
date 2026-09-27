@@ -9,8 +9,8 @@ echo no | avdmanager create avd --force --name pocket-test --package 'system-ima
 sudo chmod a+rw /dev/kvm
 "$SDK/emulator/emulator" -avd pocket-test -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot > /tmp/pocket-emulator.log 2>&1 &
 EMULATOR_PID=$!
-trap 'kill "$EMULATOR_PID" || true' EXIT
-adb wait-for-device
+trap 'cat /tmp/pocket-emulator.log; kill "$EMULATOR_PID" || true' EXIT
+timeout 90 adb wait-for-device
 READY=false
 for attempt in $(seq 1 120); do
   if [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; then READY=true; break; fi
