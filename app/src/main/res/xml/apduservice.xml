@@ -3,7 +3,7 @@
     android:description="@string/app_name"
     android:requireDeviceUnlock="true">
     <!-- Disabled by default. A certified issuer/TSP integration must replace the test AID. -->
-    <aid-group android:category="payment" android:description="Pocket tokenized payments">
+    <aid-group android:category="payment" android:description="@string/app_name">
         <aid-filter android:name="F0010203040506" />
     </aid-group>
 </host-apdu-service>
