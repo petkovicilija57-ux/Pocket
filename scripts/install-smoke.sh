@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+export PATH="$SDK/cmdline-tools/latest/bin:$SDK/platform-tools:$PATH"
 APK="app/build/outputs/apk/debug/app-debug.apk"
 "$SDK/build-tools/35.0.0/apksigner" verify --verbose "$APK"
 sdkmanager 'system-images;android-35;google_apis;x86_64' 'emulator'
