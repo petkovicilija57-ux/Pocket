@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.application'
+}
+
+def cfg = { String key, String fallback = "" ->
+    return project.findProperty(key)?.toString() ?: System.getenv(key) ?: fallback
+}
+
+def providerEnabled = cfg('POCKET_PAYMENT_PROVIDER_ENABLED', 'false').toBoolean()
+
+android {
+    namespace 'co.pocket.companion'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'co.pocket.companion'
+        minSdk 26
+        targetSdk 35
+        versionCode 50
+        versionName '0.5.0'
+
+        buildConfigField 'String', 'PAYPAL_BACKEND_BASE_URL', '"' + cfg('POCKET_PAYPAL_BACKEND_BASE_URL').replace('"','\\"') + '"'
+        buildConfigField 'String', 'CARD_PROVISIONING_URL', '"' + cfg('POCKET_CARD_PROVISIONING_URL').replace('"','\\"') + '"'
+        buildConfigField 'boolean', 'PAYMENT_PROVIDER_ENABLED', providerEnabled.toString()
+        manifestPlaceholders = [paymentServiceEnabled: providerEnabled ? 'true' : 'false']
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    packaging {
+        resources.excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE*', 'META-INF/NOTICE*']
+    }
+}
