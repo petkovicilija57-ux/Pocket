@@ -2,10 +2,14 @@
 set -euo pipefail
 SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
 export PATH="$SDK/cmdline-tools/latest/bin:$SDK/platform-tools:$PATH"
+export ANDROID_USER_HOME="${RUNNER_TEMP:-/tmp}/pocket-android"
+export ANDROID_EMULATOR_HOME="$ANDROID_USER_HOME"
+export ANDROID_AVD_HOME="$ANDROID_USER_HOME/avd"
+mkdir -p "$ANDROID_AVD_HOME"
 APK="app/build/outputs/apk/debug/app-debug.apk"
 "$SDK/build-tools/35.0.0/apksigner" verify --verbose "$APK"
 sdkmanager 'system-images;android-35;google_apis;x86_64' 'emulator'
-echo no | avdmanager create avd --force --name pocket-test --package 'system-images;android-35;google_apis;x86_64'
+echo no | avdmanager create avd --force --name pocket-test --path "$ANDROID_AVD_HOME/pocket-test.avd" --package 'system-images;android-35;google_apis;x86_64'
 sudo chmod a+rw /dev/kvm
 "$SDK/emulator/emulator" -avd pocket-test -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot > /tmp/pocket-emulator.log 2>&1 &
 EMULATOR_PID=$!
