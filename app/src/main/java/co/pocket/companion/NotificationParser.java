@@ -30,10 +30,10 @@ public final class NotificationParser {
                 String whole = s.substring(0, sep).replace(",", "").replace(".", "");
                 String frac = s.substring(sep + 1);
                 if (frac.length() == 1) frac += "0";
-                return Long.parseLong(whole) * 100L + Long.parseLong(frac);
+                return Math.addExact(Math.multiplyExact(Long.parseLong(whole), 100L), Long.parseLong(frac));
             }
-            return Long.parseLong(s.replace(",", "").replace(".", "")) * 100L;
-        } catch (NumberFormatException e) { return null; }
+            return Math.multiplyExact(Long.parseLong(s.replace(",", "").replace(".", "")), 100L);
+        } catch (NumberFormatException | ArithmeticException e) { return null; }
     }
 
     public record Parsed(long cents, String currency, String merchant) {}

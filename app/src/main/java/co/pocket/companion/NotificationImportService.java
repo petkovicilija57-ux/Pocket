@@ -10,12 +10,13 @@ public final class NotificationImportService extends NotificationListenerService
         String pkg = sbn.getPackageName();
         if (!SourceRules.isEnabledSource(this, pkg)) return;
         Notification n = sbn.getNotification();
+        if (n.extras == null) return;
         CharSequence t = n.extras.getCharSequence(Notification.EXTRA_TITLE);
         CharSequence x = n.extras.getCharSequence(Notification.EXTRA_TEXT);
         String title = t == null ? "" : t.toString();
         String text = x == null ? "" : x.toString();
         long when = sbn.getPostTime();
-        PocketDb db = new PocketDb(this);
+        try (PocketDb db = new PocketDb(this)) {
         db.noteSource(pkg, SourceRules.label(pkg), when);
 
         if (!SourceRules.isEnabledSource(this, pkg)) return;
@@ -24,5 +25,6 @@ public final class NotificationImportService extends NotificationListenerService
         if (DuplicateGuard.seenRecently(this, pkg, p.cents(), p.merchant(), when)) return;
         db.addPayment(p.cents(), p.currency(), p.merchant(), "Other", SourceRules.label(pkg), when);
         SecurityEvents.record(this, "notification_import:" + pkg);
+        }
     }
 }

@@ -11,7 +11,7 @@ public final class SuccessActivity extends Activity {
         LinearLayout l = Ui.column(this);
         l.addView(Ui.title(this, "Successful"));
         l.addView(Ui.gap(this, 12));
-        l.addView(Ui.body(this, "Your Pocket account was created successfully. Next you can enable payment notifications, connect an eligible PayPal account, or configure tokenized contactless payments."));
+        l.addView(Ui.body(this, "Your local Pocket profile was created successfully. You can now select your bank app and enable notification access. This preview does not execute payments."));
         l.addView(Ui.gap(this, 18));
         l.addView(Ui.button(this, "Continue to Pocket", v -> { startActivity(new Intent(this, MainActivity.class)); finish(); }));
         setContentView(l);

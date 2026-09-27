@@ -36,6 +36,8 @@ final class NotificationHealth {
     }
 
     static Status status(Context c, String pkg, String label) {
-        return new Status(listenerEnabled(c), installed(c,pkg), new PocketDb(c).lastSeen(pkg), label);
+        try (PocketDb db = new PocketDb(c)) {
+            return new Status(listenerEnabled(c), installed(c,pkg), db.lastSeen(pkg), label);
+        }
     }
 }

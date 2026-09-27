@@ -56,4 +56,12 @@ final class PocketDb extends SQLiteOpenHelper {
         }
         return out;
     }
+
+    List<String> recentPayments() {
+        List<String> out = new ArrayList<>();
+        try (Cursor c = getReadableDatabase().rawQuery("SELECT amount_cents,currency,merchant,created FROM payments ORDER BY created DESC LIMIT 50", null)) {
+            while (c.moveToNext()) out.add(String.format(java.util.Locale.getDefault(), "%s  %d.%02d %s  %s", c.getString(2), c.getLong(0) / 100, c.getLong(0) % 100, c.getString(1), java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(c.getLong(3)))));
+        }
+        return out;
+    }
 }

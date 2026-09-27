@@ -27,6 +27,9 @@ jobs:
       - name: Lint report
         if: failure()
         run: cat app/build/reports/lint-results-debug.txt
+      - name: Verify install and launch on Android 35
+        timeout-minutes: 12
+        run: bash scripts/install-smoke.sh
       - uses: actions/upload-artifact@v4
         with:
           name: Pocket-test-apk
@@ -36,5 +39,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk Pocket-test.apk
-          gh release create "test-${{ github.run_number }}" Pocket-test.apk --target "${{ github.sha }}" --prerelease --title "Pocket test build ${{ github.run_number }}" --notes "Test build only. Local registration and notification diagnostics. No live PayPal connection, card provisioning or NFC payments. Not device-tested; not a production wallet."
+          cp app/build/outputs/apk/debug/app-debug.apk Pocket-preview.apk
+          gh release create "test-${{ github.run_number }}" Pocket-preview.apk --target "${{ github.sha }}" --prerelease --title "Pocket Preview ${{ github.run_number }}" --notes "Separate preview app; does not replace older Pocket installations or migrate their data. Signature, installation and registration-screen launch tested on Android 35 emulator. Bank selection and imported payment history included. No live PayPal, card provisioning or NFC payments. Not a production wallet."
