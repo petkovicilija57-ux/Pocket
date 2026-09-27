@@ -1,41 +1,29 @@
-# Pocket 0.5.0
+# Pocket 0.6.0
 
-Android package: `co.pocket.companion`
+Local Android expense tracker. Package: `co.pocket.tracker`. Android 8 or newer.
 
-This source keeps the Pocket payment-tracker concept and adds a real connection-health layer, PayPal OAuth handoff, secure card-provisioning entry point, and Android NFC-wallet readiness checks.
+## Implemented
 
-## New in 0.5.0
+- Local registration with a success screen; password verification on entry and after backgrounding.
+- Add, edit and delete BAM expenses; date and category selection; monthly search/filter.
+- Monthly budget, remaining amount and remaining daily allowance.
+- Savings goals with editable targets and saved amounts.
+- Monthly subscriptions with due dates and a confirmed action to record an expense and advance the due date. This does not transfer money.
+- Monthly totals by category and CSV export through Android's document picker.
+- Bank app selection, notification permission status and last observed notifications. Import recognizes a limited set of BAM purchase notifications; users must review entries.
 
-- app-entry health check for notification listener, Google Wallet, PayPal, and configured bank source
-- last-seen time/count for notification sources
-- real PayPal hosted-login architecture through a backend; Pocket never asks for the PayPal password or verification code
-- `Successful` screen after Pocket account creation
-- secure card-provisioning entry point that never saves PAN/CVC/PIN
-- NFC capability screen and Android 15 Wallet-role integration
-- HCE payment service scaffold disabled by default until a certified issuer/TSP provider is configured
-- Android Keystore AES-GCM secure store
-- PBKDF2 local password hashing
-- backup/data-transfer protections and cleartext-network blocking
-- purchase-only notification parser with OTP/PIN/refund/failed/pending exclusions and duplicate suppression
+## Verification
 
-## Build configuration
+GitHub Actions builds and lints the app, validates its APK signature, installs it on an Android 35 emulator, exercises registration/unlock/expense/background locking, and tests database persistence and CRUD operations. Tests do not certify all devices or every bank notification format.
 
-Set these as Gradle project properties or environment variables:
+## Security and limits
 
-- `POCKET_PAYPAL_BACKEND_BASE_URL=https://...`
-- `POCKET_CARD_PROVISIONING_URL=https://...`
-- `POCKET_PAYMENT_PROVIDER_ENABLED=false` (leave false until the certified payment module exists)
+Passwords use PBKDF2; their hashes are wrapped with an Android Keystore key. Screenshots and Android backups are disabled. Expenses are stored in app-private SQLite, not an independently encrypted database. There is no cloud account, recovery service or guarantee against rooted-device access. No bank passwords or card details should be entered.
 
-Then open the project in Android Studio and build the `app` module.
+CI currently signs with a development key generated on each runner. This is not a production signing setup: future APKs may not update an existing installation. A private persistent signing identity and a securely configured build secret are still required for a stable production release. Never publish a signing private key. This package installs alongside previous Pocket packages and does not migrate their data.
 
-## Signing
+Live PayPal login, card provisioning and NFC payments are disabled. This is not a payment wallet. Receipt attachments, scheduled system reminders, data import/restore, and bank-provider integrations are not implemented. CSV export is a report, not a complete backup.
 
-To update an already installed Pocket build, sign the APK with the same existing Pocket signing identity. Do not commit the private keystore or its password to this project or a public repository.
+## Build
 
-## What is and is not live
-
-Notification health and notification imports are native Android functionality and become live after the user grants notification access.
-
-PayPal linking becomes live when the backend URL points to a deployed server configured with valid PayPal app credentials.
-
-NFC contactless card payments cannot be honestly marked live until an approved issuer/TSP tokenization module is connected and certified. The source intentionally fails closed instead of pretending that a typed card number can be used as a contactless payment credential.
+Use JDK 17, Gradle 8.9 and Android SDK 35. Run `gradle assembleDebug assembleDebugAndroidTest lintDebug`. The CI installation script also requires the Android emulator, command-line tools, KVM and Python 3.

@@ -15,10 +15,12 @@ def nodes():
 
 def find(text=None, cls=None, index=0):
     for _ in range(8):
-        matches = [n for n in nodes() if (text is None or text in (n.get("text", ""), n.get("content-desc", ""))) and (cls is None or n.get("class") == cls)]
+        current = nodes()
+        matches = [n for n in current if (text is None or text.casefold() in (n.get("text", "").casefold(), n.get("content-desc", "").casefold())) and (cls is None or n.get("class") == cls)]
         if len(matches) > index:
             return matches[index]
         time.sleep(1)
+    print([(n.get("text"), n.get("content-desc"), n.get("class")) for n in current])
     raise AssertionError("Missing control: " + str((text, cls, index)))
 
 
