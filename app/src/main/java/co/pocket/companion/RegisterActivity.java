@@ -11,6 +11,7 @@ import android.widget.Toast;
 public final class RegisterActivity extends Activity {
     @Override protected void onCreate(Bundle b) {
         super.onCreate(b);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
         LinearLayout l = Ui.column(this);
         l.addView(Ui.title(this, "Create Pocket account"));
         l.addView(Ui.body(this, "Local account. Pocket never needs your bank, PayPal, or card password."));

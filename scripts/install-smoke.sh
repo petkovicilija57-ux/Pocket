@@ -23,10 +23,14 @@ done
 [ "$READY" = true ]
 adb shell input keyevent 82
 adb install "$APK"
-adb shell am start -W -n co.pocket.companion.preview/co.pocket.companion.MainActivity
+adb shell am start -W -n co.pocket.tracker/co.pocket.companion.MainActivity
 sleep 3
 adb shell uiautomator dump /sdcard/pocket-ui.xml
 adb pull /sdcard/pocket-ui.xml /tmp/pocket-ui.xml
 grep -q 'Create Pocket account' /tmp/pocket-ui.xml
+python3 scripts/ui-smoke.py
+adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb shell am instrument -w co.pocket.tracker.test/co.pocket.companion.StoreTestRunner | tee /tmp/pocket-data-tests.log
+grep -q 'Pocket data tests passed' /tmp/pocket-data-tests.log
 adb install -r "$APK"
 echo 'APK signature, clean install, launch and same-key reinstall passed on Android 35.'

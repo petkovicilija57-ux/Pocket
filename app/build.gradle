@@ -13,11 +13,12 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'co.pocket.companion.preview'
+        applicationId 'co.pocket.tracker'
         minSdk 26
         targetSdk 35
-        versionCode 51
-        versionName '0.5.1-preview'
+        versionCode 60
+        versionName '0.6.0'
+        testInstrumentationRunner 'co.pocket.companion.StoreTestRunner'
 
         buildConfigField 'String', 'PAYPAL_BACKEND_BASE_URL', '"' + cfg('POCKET_PAYPAL_BACKEND_BASE_URL').replace('"','\\"') + '"'
         buildConfigField 'String', 'CARD_PROVISIONING_URL', '"' + cfg('POCKET_CARD_PROVISIONING_URL').replace('"','\\"') + '"'

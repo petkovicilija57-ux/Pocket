@@ -26,7 +26,7 @@ jobs:
           javac -d /tmp/pocket-tests app/src/main/java/co/pocket/companion/NotificationParser.java app/src/test/java/co/pocket/companion/NotificationParserSmokeTest.java
           java -cp /tmp/pocket-tests co.pocket.companion.NotificationParserSmokeTest
       - name: Build and lint
-        run: gradle assembleDebug lintDebug --no-daemon
+        run: gradle assembleDebug assembleDebugAndroidTest lintDebug --no-daemon
       - name: Lint report
         if: failure()
         run: cat app/build/reports/lint-results-debug.txt
@@ -42,5 +42,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          cp app/build/outputs/apk/debug/app-debug.apk Pocket-preview.apk
-          gh release create "test-${{ github.run_number }}" Pocket-preview.apk --target "${{ github.sha }}" --prerelease --title "Pocket Preview ${{ github.run_number }}" --notes "Separate preview app; does not replace older Pocket installations or migrate their data. Signature, installation and registration-screen launch tested on Android 35 emulator. Bank selection and imported payment history included. No live PayPal, card provisioning or NFC payments. Not a production wallet."
+          cp app/build/outputs/apk/debug/app-debug.apk Pocket-0.6.0.apk
+          gh release create "tracker-${{ github.run_number }}" Pocket-0.6.0.apk --target "${{ github.sha }}" --prerelease --title "Pocket 0.6.0 - Expense tracker" --notes "Local expense editing, monthly budgets, savings goals, subscription tracking, reports, CSV export and password lock. Tested on Android 35 emulator. Separate app package preserves earlier Pocket data. Development signing: not a production payment wallet. No live NFC payments, card provisioning or PayPal login."
