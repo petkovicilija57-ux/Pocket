@@ -31,6 +31,7 @@ public final class NfcWalletActivity extends Activity {
     }
 
     private void requestWalletRole() {
+        if (Build.VERSION.SDK_INT < 35) return;
         if (!BuildConfig.PAYMENT_PROVIDER_ENABLED) { Toast.makeText(this,"Provider must be configured before Pocket can become a payment wallet.",Toast.LENGTH_LONG).show(); return; }
         RoleManager rm = getSystemService(RoleManager.class);
         if (rm != null && rm.isRoleAvailable(RoleManager.ROLE_WALLET) && !rm.isRoleHeld(RoleManager.ROLE_WALLET)) {

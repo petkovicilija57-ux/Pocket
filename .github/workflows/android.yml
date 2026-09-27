@@ -24,6 +24,9 @@ jobs:
           java -cp /tmp/pocket-tests co.pocket.companion.NotificationParserSmokeTest
       - name: Build and lint
         run: gradle assembleDebug lintDebug --no-daemon
+      - name: Lint report
+        if: failure()
+        run: cat app/build/reports/lint-results-debug.txt
       - uses: actions/upload-artifact@v4
         with:
           name: Pocket-test-apk
